@@ -66,6 +66,11 @@ await() {
          -- bash -c "while kill -0 $1; do sleep 0.1; done"
 }
 
+if [[ $# -eq 0 ]]; then
+    usage
+    exit 1
+fi
+
 subcommand=
 case "$1" in
     shell|source|run|edit|homepage|search)
