@@ -139,6 +139,10 @@ mapfile -t raw_selection < <(
     fzf "${fzf_args[@]}" < /tmp/ns-packages.out
 )
 
+if (( "${#raw_selection[@]}" < 1 )); then
+    exit 1
+fi
+
 # Transform for certain operations
 flake_args=("${raw_selection[@]/#"$category/ "/"nixpkgs#"}")
 selections=("${raw_selection[@]/#"$category/ "/}")
