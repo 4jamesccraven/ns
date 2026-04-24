@@ -99,7 +99,7 @@ ntv_pid=$!
 # Determine the category of the search
 category=
 case "$subcommand" in
-    search)
+    search|source)
         category=$(
             gum choose \
                 --header "Search Category" \
@@ -152,6 +152,9 @@ case "$subcommand" in
         ;;
     edit)
         exec nix edit "${flake_args[0]}"
+        ;;
+    source)
+        xdg-open "$(nix-search-tv source "${raw_selection[0]}")"
         ;;
     homepage)
         for selection in "${raw_selection[@]}"; do
