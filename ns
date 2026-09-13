@@ -59,11 +59,26 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 EOF
 }
 
+# Note: all the ceremony in this function is a workaround for an upstream
+#   issue with BubbleTea (part of gum). We have to go out of canonical mode
+#   and flush stdin before we exit, or fzf gets junk in its input.
+#   see: https://github.com/charmbracelet/bubbletea/issues/1627
 await() {
+    tty_state=$(stty -g < /dev/tty) # Save terminal state
+
+     # Disable echoing input
+    stty -echo < /dev/tty
+
     gum spin --spinner points \
          --spinner.foreground $FG \
          --title "Fetching Packages..." \
          -- bash -c "while kill -0 $1; do sleep 0.1; done"
+
+    # Disable canonical mode and read everything in stdin
+    stty -icanon -echo min 0 time 0 < /dev/tty
+    dd if=/dev/tty of=/dev/null iflag=nonblock 2>/dev/null
+
+    stty "$tty_state" < /dev/tty # Restore terminal state
 }
 
 if [[ $# -eq 0 ]]; then
@@ -133,6 +148,8 @@ esac
 
 # Wait until all the packages are available for searching
 await "$ntv_pid"
+
+# Flush any input currently queued in the terminal.
 
 # Get the user selection(s)
 mapfile -t raw_selection < <(

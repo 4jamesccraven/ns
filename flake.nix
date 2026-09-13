@@ -1,7 +1,7 @@
 {
   description = "A fuzzy search helper for various nix options (powered by nix-search-tv).";
 
-  inputs.nixpkgs.url = "https://channels.nixos.org/nixos-25.11/nixexprs.tar.xz";
+  inputs.nixpkgs.url = "https://channels.nixos.org/nixos-unstable/nixexprs.tar.xz";
 
   outputs =
     { nixpkgs, ... }:
