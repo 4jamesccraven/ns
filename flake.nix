@@ -9,31 +9,14 @@
       inherit (nixpkgs) lib;
       eachDefaultSystem =
         function: lib.genAttrs lib.systems.flakeExposed (system: function nixpkgs.legacyPackages.${system});
-
-      mkPackage =
-        pkgs:
-        pkgs.writeShellApplication {
-          name = "ns";
-          text = builtins.readFile ./ns;
-          runtimeInputs = with pkgs; [
-            fzf
-            gum
-            nix-search-tv
-          ];
-
-          meta = {
-            license = pkgs.lib.licenses.gpl3Plus;
-            mainProgram = "ns";
-          };
-        };
     in
     {
       packages = eachDefaultSystem (pkgs: {
-        default = mkPackage pkgs;
+        default = import ./package.nix { inherit pkgs; };
       });
 
       overlays.default = final: prev: {
-        ns = mkPackage prev;
+        ns = import ./package.nix { pkgs = prev; };
       };
 
       devShells = eachDefaultSystem (pkgs: {

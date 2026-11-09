@@ -1,0 +1,211 @@
+#compdef ns
+
+autoload -U is-at-least
+
+_ns() {
+    typeset -A opt_args
+    typeset -a _arguments_options
+    local ret=1
+
+    if is-at-least 5.2; then
+        _arguments_options=(-s -S -C)
+    else
+        _arguments_options=(-s -C)
+    fi
+
+    local context curcontext="$curcontext" state line
+    _arguments "${_arguments_options[@]}" : \
+'--license[Print license info and exit]' \
+'-h[Print help]' \
+'--help[Print help]' \
+":: :_ns_commands" \
+"*::: :->ns-complete" \
+&& ret=0
+    case $state in
+    (ns-complete)
+        words=($line[1] "${words[@]}")
+        (( CURRENT += 1 ))
+        curcontext="${curcontext%:*:*}:ns-command-$line[1]:"
+        case $line[1] in
+            (shell)
+_arguments "${_arguments_options[@]}" : \
+'-h[Print help]' \
+'--help[Print help]' \
+&& ret=0
+;;
+(run)
+_arguments "${_arguments_options[@]}" : \
+'-h[Print help]' \
+'--help[Print help]' \
+&& ret=0
+;;
+(edit)
+_arguments "${_arguments_options[@]}" : \
+'-h[Print help]' \
+'--help[Print help]' \
+&& ret=0
+;;
+(homepage)
+_arguments "${_arguments_options[@]}" : \
+'-h[Print help]' \
+'--help[Print help]' \
+&& ret=0
+;;
+(source)
+_arguments "${_arguments_options[@]}" : \
+'-h[Print help]' \
+'--help[Print help]' \
+&& ret=0
+;;
+(search)
+_arguments "${_arguments_options[@]}" : \
+'-h[Print help]' \
+'--help[Print help]' \
+&& ret=0
+;;
+(help)
+_arguments "${_arguments_options[@]}" : \
+":: :_ns__subcmd__help_commands" \
+"*::: :->help" \
+&& ret=0
+
+    case $state in
+    (help)
+        words=($line[1] "${words[@]}")
+        (( CURRENT += 1 ))
+        curcontext="${curcontext%:*:*}:ns-help-command-$line[1]:"
+        case $line[1] in
+            (shell)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(run)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(edit)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(homepage)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(source)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(search)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(help)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+        esac
+    ;;
+esac
+;;
+        esac
+    ;;
+esac
+}
+
+(( $+functions[_ns_commands] )) ||
+_ns_commands() {
+    local commands; commands=(
+'shell:Start an interactive shell with some packages from nixpkgs' \
+'run:Run a program from nixpkgs' \
+'edit:Open the source code for a derivation from nixpkgs in \$EDITOR' \
+'homepage:Open the homepage for the selected package(s)' \
+'source:Open the package'\''s nix declaration' \
+'search:Search options (prints to stdout on selection)' \
+'help:Print this message or the help of the given subcommand(s)' \
+    )
+    _describe -t commands 'ns commands' commands "$@"
+}
+(( $+functions[_ns__subcmd__edit_commands] )) ||
+_ns__subcmd__edit_commands() {
+    local commands; commands=()
+    _describe -t commands 'ns edit commands' commands "$@"
+}
+(( $+functions[_ns__subcmd__help_commands] )) ||
+_ns__subcmd__help_commands() {
+    local commands; commands=(
+'shell:Start an interactive shell with some packages from nixpkgs' \
+'run:Run a program from nixpkgs' \
+'edit:Open the source code for a derivation from nixpkgs in \$EDITOR' \
+'homepage:Open the homepage for the selected package(s)' \
+'source:Open the package'\''s nix declaration' \
+'search:Search options (prints to stdout on selection)' \
+'help:Print this message or the help of the given subcommand(s)' \
+    )
+    _describe -t commands 'ns help commands' commands "$@"
+}
+(( $+functions[_ns__subcmd__help__subcmd__edit_commands] )) ||
+_ns__subcmd__help__subcmd__edit_commands() {
+    local commands; commands=()
+    _describe -t commands 'ns help edit commands' commands "$@"
+}
+(( $+functions[_ns__subcmd__help__subcmd__help_commands] )) ||
+_ns__subcmd__help__subcmd__help_commands() {
+    local commands; commands=()
+    _describe -t commands 'ns help help commands' commands "$@"
+}
+(( $+functions[_ns__subcmd__help__subcmd__homepage_commands] )) ||
+_ns__subcmd__help__subcmd__homepage_commands() {
+    local commands; commands=()
+    _describe -t commands 'ns help homepage commands' commands "$@"
+}
+(( $+functions[_ns__subcmd__help__subcmd__run_commands] )) ||
+_ns__subcmd__help__subcmd__run_commands() {
+    local commands; commands=()
+    _describe -t commands 'ns help run commands' commands "$@"
+}
+(( $+functions[_ns__subcmd__help__subcmd__search_commands] )) ||
+_ns__subcmd__help__subcmd__search_commands() {
+    local commands; commands=()
+    _describe -t commands 'ns help search commands' commands "$@"
+}
+(( $+functions[_ns__subcmd__help__subcmd__shell_commands] )) ||
+_ns__subcmd__help__subcmd__shell_commands() {
+    local commands; commands=()
+    _describe -t commands 'ns help shell commands' commands "$@"
+}
+(( $+functions[_ns__subcmd__help__subcmd__source_commands] )) ||
+_ns__subcmd__help__subcmd__source_commands() {
+    local commands; commands=()
+    _describe -t commands 'ns help source commands' commands "$@"
+}
+(( $+functions[_ns__subcmd__homepage_commands] )) ||
+_ns__subcmd__homepage_commands() {
+    local commands; commands=()
+    _describe -t commands 'ns homepage commands' commands "$@"
+}
+(( $+functions[_ns__subcmd__run_commands] )) ||
+_ns__subcmd__run_commands() {
+    local commands; commands=()
+    _describe -t commands 'ns run commands' commands "$@"
+}
+(( $+functions[_ns__subcmd__search_commands] )) ||
+_ns__subcmd__search_commands() {
+    local commands; commands=()
+    _describe -t commands 'ns search commands' commands "$@"
+}
+(( $+functions[_ns__subcmd__shell_commands] )) ||
+_ns__subcmd__shell_commands() {
+    local commands; commands=()
+    _describe -t commands 'ns shell commands' commands "$@"
+}
+(( $+functions[_ns__subcmd__source_commands] )) ||
+_ns__subcmd__source_commands() {
+    local commands; commands=()
+    _describe -t commands 'ns source commands' commands "$@"
+}
+
+if [ "$funcstack[1]" = "_ns" ]; then
+    _ns "$@"
+else
+    compdef _ns ns
+fi
